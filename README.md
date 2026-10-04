@@ -1,4 +1,4 @@
-# devmaxx-patches
+# morphe-patches
 
 Morphe patches for [Devmaxx](https://devmaxx.dev) (`dev.devmaxx`).
 
@@ -17,16 +17,33 @@ Subscription entitlement is **not** modified. Devmaxx uses RevenueCat; the subsc
 fetched from `api-production.8-lives-cat.io` and lands in
 `dev.devmaxx.data.model.UserSubscription`. Anything gated on that still requires a valid purchase.
 
+## Add to Morphe
+
+Open this link on your phone, or paste it into Morphe's "Add patch source" dialog:
+
+```
+https://morphe.software/add-source?github=lucideds/morphe-patches
+```
+
+Requires **Expert Mode**: Morphe → Settings → Expert settings → Expert Mode.
+
+The manager reads `patches-bundle.json` from the repo root, which points at the `.mpp` attached
+to the latest GitHub release. **Bump `version` and `download_url` in `patches-bundle.json` when
+you tag a release** — that file is the only thing the manager reads, so a new tag alone is not
+enough.
+
 ## Build
 
-Requires JDK 21+ and the Morphe patcher (`app.morphe:morphe-patcher`, GitHub Packages).
+Requires JDK 21+ and GitHub Packages access to the Morphe registry (`gpr.user` / `gpr.key` in
+`~/.gradle/gradle.properties`).
 
 ```bash
 ./gradlew buildAndroid      # -> patches/build/libs/patches-*.mpp
+gh release create v<version> patches/build/libs/patches-*.mpp
 ```
 
-`build.gradle.kts` must pass `-dontobfuscate` to R8: a renamed patch class breaks the
-`PatchLoader` reflection that discovers patches from the bundle.
+The bundle must be built with `-dontobfuscate`: a renamed patch class breaks the `PatchLoader`
+reflection that discovers patches from the bundle.
 
 ## Layout
 
